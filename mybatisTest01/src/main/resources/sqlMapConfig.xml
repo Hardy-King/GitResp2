@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <!--引入外呼属性文件-->
+    <properties resource="db.properties"/>
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+<!--别名-->
+    <typeAliases>
+        <!--<typeAlias type="com.gk.entity.Dept" alias="dept"/>-->
+        <package name="com.gk"/>
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc_driver}"/>
+                <property name="url" value="${jdbc_url}"/>
+                <property name="username" value="${jdbc_username}"/>
+                <property name="password" value="${jdbc_password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--加载mapper映射文件-->
+    <mappers>
+        <mapper resource="com/gk/mapper/DeptMapper.xml"/>
+        <mapper resource="com/gk/mapper/EmpMapper.xml"/>
+        <mapper resource="com/gk/mapper/EmpMapper2.xml"/>
+        <mapper resource="com/gk/mapper/EmpMapper3.xml"/>
+    </mappers>
+</configuration>

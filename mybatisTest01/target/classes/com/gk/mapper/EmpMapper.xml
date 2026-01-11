@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gk.mapper.EmpMapper">
+    <!--public List<Dept> findAll(){    }-->
+    <select id="findOne" resultType="emp" >
+        select * from emp where empno = 7499
+    </select>
+
+    <select id="findAll" resultType="emp">
+        select * from emp
+    </select>
+
+    <select id="findEmpMap" resultType="map">
+        select * from emp
+    </select>
+</mapper>

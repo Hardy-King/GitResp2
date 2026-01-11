@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gk.mapper.EmpMapper2">
+
+    <!--sql-->
+    <sql id="empColumn">empno,ename,job,mgr,hiredate,sal,comm,deptno</sql>
+    <sql id="baseSelect">select <include refid="empColumn"> </include> from emp</sql>
+
+    <select id="findByCondition" resultType="emp">
+        <include refid="baseSelect"></include> <where>
+                              <if test="empno != null">
+                                  and empno = #{empno}
+                              </if>
+                              <if test="ename != null and ename != ''">
+                                 and ename like concat('%',#{ename},'%')
+                              </if>
+                                <if test="job != null and job != ''">
+                                    and job =#{job}
+                                </if>
+                                <if test="mgr != null">
+                                    and mgr =#{mgr}
+                                </if>
+                                <if test="hiredate != null">
+                                    and hiredate =#{hiredate}
+                                </if>
+                                <if test="sal != null">
+                                    and sal =#{sal}
+                                </if>
+                                <if test="comm != null">
+                                    and comm =#{comm}
+                                </if>
+                                <if test="deptno != null">
+                                    and deptno =#{deptno}
+                                </if>
+    </where>
+
+
+    </select>
+
+    <select id="findByCondition2" resultType="emp">
+        select * from emp <where>
+        <if test="empno != null">
+            and empno = #{empno}
+        </if>
+        <if test="ename != null and ename != ''">
+                 <bind name="likePattern" value="'%'+ename+'%'"/>
+            and ename like #{likePattern}
+        </if>
+        <if test="job != null and job != ''">
+            and job =#{job}
+        </if>
+        <if test="mgr != null">
+            and mgr =#{mgr}
+        </if>
+        <if test="hiredate != null">
+            and hiredate =#{hiredate}
+        </if>
+        <if test="sal != null">
+            and sal =#{sal}
+        </if>
+        <if test="comm != null">
+            and comm =#{comm}
+        </if>
+        <if test="deptno != null">
+            and deptno =#{deptno}
+        </if>
+    </where>
+
+
+    </select>
+
+
+    <!--List<Emp> findByEmpnos1(int[] empnos);
+ collection=""  遍历的集合或者是数组
+                 参数是数组,collection中名字指定为array
+                 参数是List集合,collection中名字指定为list
+ separator=""   多个元素取出的时候 用什么文字分隔
+ open=""        以什么开头
+ close=""       以什么结尾
+ item=""        中间变量名
+ for(Person per:PersonList)
+ -->
+    <select id="findByEmpno1" resultType="emp">
+        select * from emp where empno in
+                          <foreach collection="array" separator="," open="(" item="deptno" close=")">
+                              #{deptno}
+                          </foreach>
+    </select>
+    <select id="findByEmpno2" resultType="emp">
+        select * from emp where empno in
+        <foreach collection="list" separator="," open="(" item="deptno" close=")">
+            #{deptno}
+        </foreach>
+    </select>
+</mapper>

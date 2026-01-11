@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gk.mapper.EmpMapper">
+
+    <!--一对一的管理查询
+        一个员工对应一个部门，查询这个员工以及所在的部门信息
+    -->
+    <resultMap id="empResultMap" type="emp">
+        <!--如果是主键用id 普通的用result-->
+        <id column="empno" property="empno" javaType="int" jdbcType="INTEGER"/>
+        <result column="ename" property="name"/>
+        <result column="job" property="job"/>
+        <result column="mgr" property="mgr"/>
+        <result column="hiredate" property="hiredate"/>
+        <result column="sal" property="sal"/>
+        <result column="comm" property="comm"/>
+        <result column="deptno" property="deptno"/>
+        <!--一对一封装 信息关系标签-->
+        <association property="dept" javaType="dept">
+            <id column="deptno" property="deptno"/>
+            <result column="dname" property="dname"/>
+            <result column="loc" property="loc"/>
+        </association>
+    </resultMap>
+
+    <select id="findEmpAndDeptByEmpId" resultMap="empResultMap">
+        select * from emp e LEFT JOIN dept d ON e.deptno = d.deptno WHERE empno = #{empno}
+    </select>
+
+
+    <resultMap id="empAndDeptMap" type="dept">
+        <id column="deptno" property="deptno"/>
+        <result column="dname" property="dname"/>
+        <result column="loc" property="loc"/>
+        <collection property="empList" ofType="emp" >
+            <!--设置emp本身的八个属性的映射关系-->
+            <id property="empno" column="empno"/>
+            <result property="name" column="ename"/>
+            <result property="job" column="job"/>
+            <result property="sal" column="sal"/>
+            <result property="hiredate" column="hiredate"/>
+            <result property="mgr" column="mgr"/>
+            <result property="comm" column="comm"/>
+            <result property="deptno" column="deptno"/>
+        </collection>
+
+    </resultMap>
+
+    <!--一对多的管理查询
+        一个部门，以及部门里的所有成员
+    -->
+    <select id="findDeptAndEmpByDeptId" resultMap="empAndDeptMap">
+        SELECT * FROM dept d LEFT JOIN emp e ON d.DEPTNO = e.DEPTNO WHERE e.DEPTNO = #{deptno};
+    </select>
+
+    <!--Project findProjectJoinEmpsByPid(int pid);-->
+    <resultMap id="projectJoinEmps" type="project">
+        <id column="pid" property="pid"></id>
+        <result column="pname" property="pname"/>
+        <result column="money" property="money"/>
+        <!--一对多 集合属性 collection-->
+        <collection property="projectRecords" ofType="projectRecord">
+            <id column="empno" property="empno"/>
+            <id column="pid" property="pid"/>
+            <!--一对一 -->
+            <association property="emp" javaType="emp">
+                <id property="empno" column="empno"/>
+                <result property="name" column="ename"/>
+                <result property="job" column="job"/>
+                <result property="sal" column="sal"/>
+                <result property="hiredate" column="hiredate"/>
+                <result property="mgr" column="mgr"/>
+                <result property="comm" column="comm"/>
+                <result property="deptno" column="deptno"/>
+            </association>
+        </collection>
+
+    </resultMap>
+
+    <select id="findProjectJoinEmpsByPid"  resultMap="projectJoinEmps">
+        select * from
+            project p
+                left join projectrecord pr
+                          on p.pid = pr.pid
+                left join emp e
+                          on e.empno = pr.empno
+        where p.pid= #{pid}
+    </select>
+
+
+</mapper>

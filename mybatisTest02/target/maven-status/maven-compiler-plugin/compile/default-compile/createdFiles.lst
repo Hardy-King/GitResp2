@@ -1,0 +1,4 @@
+com\gk\entity\Emp.class
+com\gk\entity\Dept.class
+com\gk\Main.class
+com\gk\mapper\EmpMapper.class
